@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موجز العالم | نبض الأخبار العالمية لحظة بلحظة</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: IBM Plex Sans Arabic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['IBM Plex Sans Arabic', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fff1f2',
+                            500: '#e11d48',
+                            600: '#e11d48',
+                            700: '#be123c',
+                            900: '#881337',
+                        },
+                        accent: {
+                            blue: '#2563eb',
+                            sky: '#0284c7',
+                            emerald: '#059669',
+                        }
+                    },
+                    boxShadow: {
+                        'bento': '0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.03)',
+                        'bento-hover': '0 20px 35px -10px rgba(0, 0, 0, 0.09), 0 8px 16px -4px rgba(0, 0, 0, 0.04)',
+                        'glow': '0 0 20px rgba(225, 29, 72, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: #F3F5F8;
+        }
+        
+        /* Custom Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F3F5F8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        /* Ticker animation */
+        .ticker-wrap {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .ticker-move {
+            display: inline-block;
+            animation: ticker 35s linear infinite;
+        }
+        .ticker-wrap:hover .ticker-move {
+            animation-play-state: paused;
+        }
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
+        /* Glassmorphism utility */
+        .glass-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Skeleton shimmer effect */
+        .skeleton {
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased selection:bg-rose-100 selection:text-rose-700 min-h-screen flex flex-col">
+
+    <!-- Top Luminous Gradient Wash -->
+    <div class="fixed top-0 left-0 right-0 h-96 bg-gradient-to-b from-[#EBF3FE] via-[#F3F5F8] to-transparent pointer-events-none -z-10"></div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 left-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Header Section -->
+    <header class="sticky top-0 z-40 glass-header border-b border-slate-200/80 transition-all duration-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20 gap-4">
+                
+                <!-- Brand Logo & Live Pulse -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="selectCountry('all')">
+                    <div class="relative w-11 h-11 bg-rose-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-rose-600/30 font-bold text-xl transform hover:scale-105 transition-transform">
+                        <i class="fa-solid font-bold">مـ</i>
+                        <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white"></span>
+                        </span>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h1 class="font-black text-xl tracking-tight text-slate-900 leading-none">موجز العالم</h1>
+                            <span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">مباشر</span>
+                        </div>
+                        <p class="text-xs text-slate-500 font-medium mt-1">نبض الأخبار في لحظة</p>
+                    </div>
+                </div>
+
+                <!-- Live Search Bar -->
+                <div class="flex-1 max-w-xl hidden md:block">
+                    <div class="relative group">
+                        <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-rose-600 transition-colors"></i>
+                        <input type="text" id="searchInput" placeholder="ابحث عن خبر، قضية، أو دولة (مثلاً: الذكاء الاصطناعي، النفط)..." 
+                            class="w-full pl-10 pr-11 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium focus:outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 shadow-sm transition-all"
+                            onkeyup="handleSearchKey(event)">
+                        <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                            <i class="fa-solid fa-xmark text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Actions: All Countries Modal Trigger & Refresh -->
+                <div class="flex items-center gap-2.5">
+                    <button onclick="openCountryModal()" class="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-3.5 py-2 rounded-full text-xs font-semibold shadow-sm transition-all hover:border-slate-300">
+                        <i class="fa-solid fa-earth-americas text-rose-600 text-sm"></i>
+                        <span class="hidden sm:inline">كل دول العالم</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+                    </button>
+                    
+                    <button onclick="refreshNews()" title="تحديث الأخبار" class="w-9 h-9 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-full flex items-center justify-center transition-all shadow-sm">
+                        <i id="refreshIcon" class="fa-solid fa-rotate-right text-xs"></i>
+                    </button>
+
+                    <!-- Mobile Search Trigger -->
+                    <button onclick="toggleMobileSearch()" class="md:hidden w-9 h-9 bg-white border border-slate-200 text-slate-600 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Search Bar (Collapsible) -->
+            <div id="mobileSearchBox" class="hidden pb-4 md:hidden">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input type="text" id="mobileSearchInput" placeholder="ابحث هنا..." 
+                        class="w-full pl-4 pr-11 py-2.5 bg-white border border-slate-200 rounded-full text-sm font-medium focus:outline-none focus:border-rose-500"
+                        onkeyup="handleSearchKey(event)">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Top AdSense Banner Slot (Leaderboard 728x90) -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <div class="bg-white/80 border border-dashed border-slate-300 rounded-2xl p-3 flex flex-col items-center justify-center min-h-[90px] text-center shadow-sm relative overflow-hidden group">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">إعلان - ADVERTISEMENT</span>
+            <div class="flex items-center gap-3 text-slate-500 text-xs font-semibold">
+                <i class="fa-solid fa-[#000] fa-rectangle-ad text-lg text-slate-400"></i>
+                <span>مساحة إعلانية مخصصة (Google AdSense 728x90 Leaderboard)</span>
+            </div>
+            <!-- Simulated Hover Highlight -->
+            <div class="absolute inset-0 bg-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+        </div>
+    </div>
+
+    <!-- Breaking News Ticker Bar -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-5">
+        <div class="bg-white border border-slate-200/90 rounded-2xl p-2 flex items-center shadow-bento overflow-hidden">
+            <!-- Crimson Badge -->
+            <div class="bg-rose-600 text-white font-bold text-xs px-3.5 py-2 rounded-xl flex items-center gap-2 shrink-0 z-10 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                <span>عـاجـل</span>
+            </div>
+
+            <!-- News Ticker Scroll Window -->
+            <div class="ticker-wrap flex-1 mr-3 text-sm font-semibold text-slate-700">
+                <div id="tickerContent" class="ticker-move flex items-center gap-8">
+                    <span><i class="fa-solid fa-circle text-[6px] text-rose-500 ml-2"></i> قمة رياض المرتقبة تناقش مبادئ الاستقرار الاقتصادي الإقليمي</span>
+                    <span><i class="fa-solid fa-circle text-[6px] text-rose-500 ml-2"></i> تسارع الابتكارات في الذكاء الاصطناعي وتقنيات الطاقة المستدامة</span>
+                    <span><i class="fa-solid fa-circle text-[6px] text-rose-500 ml-2"></i> ارتفاع التبادلات التجارية عبر الموانئ الرئيسية إلى مستويات قياسية</span>
+                    <span><i class="fa-solid fa-circle text-[6px] text-rose-500 ml-2"></i> استقرار أسعار الطاقة العالمية وسط ترقب لاجتماعات المنظمات الدولية</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Country Selector Strip -->
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-5">
+        <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-globe text-rose-500"></i> اختر التغطية حسب الدولة:
+            </span>
+            <span id="activeCountryName" class="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-100">
+                تغطية شاملة (كل العالم)
+            </span>
+        </div>
+
+        <div class="relative">
+            <div id="countryPillContainer" class="flex items-center gap-2 overflow-x-auto pb-3 pt-1 hide-scrollbar scroll-smooth">
+                <!-- Pills populated dynamically by JS -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 mb-16 flex-1">
+        
+        <!-- Section Header / Active Filter Info -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <div>
+                <h2 id="sectionTitle" class="text-2xl font-black text-slate-900 tracking-tight">أبرز أحداث الساعة</h2>
+                <p id="sectionSubtitle" class="text-xs text-slate-500 font-medium mt-0.5">متابعة لحظية لأهم الأنباء الموثوقة من مصادرها الرسمية</p>
+            </div>
+
+            <!-- Categories Filter -->
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 hide-scrollbar">
+                <button onclick="filterCategory('all')" class="cat-btn active bg-slate-900 text-white text-xs font-semibold px-3.5 py-1.5 rounded-full transition-all">الكل</button>
+                <button onclick="filterCategory('سياسة')" class="cat-btn bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-slate-200 transition-all">سياسة</button>
+                <button onclick="filterCategory('اقتصاد')" class="cat-btn bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-slate-200 transition-all">اقتصاد</button>
+                <button onclick="filterCategory('تكنولوجيا')" class="cat-btn bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-slate-200 transition-all">تكنولوجيا</button>
+                <button onclick="filterCategory('رياضة')" class="cat-btn bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-slate-200 transition-all">رياضة</button>
+            </div>
+        </div>
+
+        <!-- BENTO HERO SECTION (TOP STORIES) -->
+        <section id="bentoHeroSection" class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-10">
+            <!-- Skeleton Loader for Hero -->
+            <div id="bentoSkeleton" class="lg:col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-8 bg-white rounded-3xl h-[420px] p-6 flex flex-col justify-between shadow-bento skeleton"></div>
+                <div class="lg:col-span-4 flex flex-col gap-6">
+                    <div class="bg-white rounded-3xl h-[200px] shadow-bento skeleton"></div>
+                    <div class="bg-white rounded-3xl h-[200px] shadow-bento skeleton"></div>
+                </div>
+            </div>
+
+            <!-- Featured Large Bento Card (Loaded dynamically) -->
+            <div id="heroMainCard" class="lg:col-span-7 xl:col-span-8 hidden">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- Side Bento Stack -->
+            <div id="heroSideStack" class="lg:col-span-5 xl:col-span-4 flex flex-col gap-6 hidden">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- MAIN NEWS GRID -->
+        <div class="flex items-center justify-between mb-5">
+            <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-list-ul text-rose-600"></i>
+                <span>أحدث المستجدات الأخبارية</span>
+            </h3>
+            <span id="newsCountBadge" class="text-xs font-bold text-slate-500 bg-white border border-slate-200 px-3 py-1 rounded-full">
+                جاري التحميل...
+            </span>
+        </div>
+
+        <!-- Grid Container -->
+        <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic Cards injected here -->
+        </div>
+
+    </main>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-white border-t border-slate-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <!-- Brand Footer -->
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-rose-600 rounded-xl flex items-center justify-center text-white font-bold text-base shadow-sm">
+                        مـ
+                    </div>
+                    <div>
+                        <div class="font-bold text-slate-900 text-base">موجز العالم | نبض الأخبار</div>
+                        <p class="text-xs text-slate-500">منصة أخبار حية تعتمد تقنيات التجميع الذكي وتغطية الأحداث حول العالم.</p>
+                    </div>
+                </div>
+
+                <!-- Footer Quick Modal Links -->
+                <div class="flex flex-wrap items-center gap-6 text-xs font-semibold text-slate-600">
+                    <button onclick="openInfoModal('about')" class="hover:text-rose-600 transition-colors">من نحن</button>
+                    <button onclick="openInfoModal('privacy')" class="hover:text-rose-600 transition-colors">سياسة الخصوصية</button>
+                    <button onclick="openInfoModal('terms')" class="hover:text-rose-600 transition-colors">شروط الاستخدام</button>
+                    <button onclick="openInfoModal('advertise')" class="hover:text-rose-600 transition-colors">أعلن معنا</button>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-100 mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+                <p>© 2026 موجز العالم - جميع الحقوق محفوظة. يتم تحديث الأخبار آلياً من المصادر الإخبارية المعتمدة.</p>
+                <div class="flex items-center gap-4 text-slate-500">
+                    <a href="#" class="hover:text-rose-600"><i class="fa-brands fa-x-twitter text-sm"></i></a>
+                    <a href="#" class="hover:text-rose-600"><i class="fa-brands fa-telegram text-sm"></i></a>
+                    <a href="#" class="hover:text-rose-600"><i class="fa-solid fa-rss text-sm"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL: ALL COUNTRIES DIRECTORY -->
+    <div id="countryModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-earth-americas"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-900">دليل التغطية حسب الدولة</h3>
+                        <p class="text-xs text-slate-500">اختر الدولة لفلترة جميع الأخبار العاجلة الواردة منها</p>
+                    </div>
+                </div>
+                <button onclick="closeCountryModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Search Inside Modal -->
+            <div class="my-4">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" id="modalCountrySearch" onkeyup="filterModalCountries()" placeholder="ابحث باسم الدولة..." class="w-full pl-4 pr-10 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-rose-500">
+                </div>
+            </div>
+
+            <!-- Countries Grid -->
+            <div id="modalCountryGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 overflow-y-auto pr-1 flex-1">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ARTICLE READER / FULL DETAIL SUMMARY -->
+    <div id="articleModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto flex flex-col">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                <div id="modalSourceBadge" class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+                    <span class="text-xs font-bold text-slate-600">مصدر رسمي</span>
+                </div>
+                <button onclick="closeArticleModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="mt-4">
+                <span id="modalCategory" class="bg-rose-100 text-rose-700 text-[11px] font-bold px-2.5 py-1 rounded-full">عاجل</span>
+                <h3 id="modalTitle" class="text-xl font-bold text-slate-900 mt-3 leading-snug">عنوان الخبر</h3>
+                
+                <div class="flex items-center gap-4 text-xs text-slate-400 mt-2 pb-4 border-b border-slate-100">
+                    <span id="modalTime"><i class="fa-regular fa-clock ml-1"></i> منذ 10 دقائق</span>
+                    <span id="modalCountryTag"><i class="fa-solid fa-location-dot ml-1"></i> العالم</span>
+                </div>
+
+                <div class="my-4 rounded-2xl overflow-hidden max-h-72 bg-slate-100">
+                    <img id="modalImage" src="" alt="صورة الخبر" class="w-full h-full object-cover">
+                </div>
+
+                <!-- Generated Smart Summary -->
+                <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 my-4">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-rose-500"></i> ملخص موجز العالم الذكي:
+                    </h4>
+                    <p id="modalSnippet" class="text-sm text-slate-600 leading-relaxed font-medium">نص الملخص الإخباري يسرد تفاصيل الحدث بأسلوب مباشر ومستند للمصادر.</p>
+                </div>
+
+                <!-- Key Takeaways -->
+                <div class="space-y-2 mb-6 text-xs text-slate-600">
+                    <div class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                        <span>تغطية فورية مستمرة للحدث عبر شبكة المراسلين والوكالات العالمية.</span>
+                    </div>
+                    <div class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-emerald-500 mt-0.5"></i>
+                        <span>المادة الإخبارية محدثة بناءً على التقارير الموثوقة الأخيرة.</span>
+                    </div>
+                </div>
+
+                <!-- Actions Button -->
+                <div class="flex flex-col sm:flex-row items-center gap-3 pt-3 border-t border-slate-100">
+                    <a id="modalOriginalLink" href="#" target="_blank" class="w-full sm:w-auto flex-1 bg-rose-600 hover:bg-rose-700 text-white font-semibold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-colors">
+                        <span>قراءة الخبر كاملاً من المصادر</span>
+                        <i class="fa-solid fa-arrow-left text-xs"></i>
+                    </a>
+                    
+                    <button onclick="copyCurrentArticleLink()" class="w-full sm:w-auto bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors">
+                        <i class="fa-solid fa-share-nodes"></i>
+                        <span>مشاركة الخبر</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: INFO PAGES (About / Privacy / Terms / Ads) -->
+    <div id="infoModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-100 max-h-[85vh] overflow-y-auto">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                <h3 id="infoModalTitle" class="font-bold text-lg text-slate-900">معلومات المنصة</h3>
+                <button onclick="closeInfoModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <div id="infoModalBody" class="mt-4 text-sm text-slate-600 leading-relaxed space-y-3">
+                <!-- Content injected dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /* WORLD COUNTRIES DATASET WITH FLAGS & GOOGLE NEWS RSS CODES */
+        const countriesList = [
+            { code: 'all', name: 'كل العالم', flag: '🌍', query: 'اخبار العالم' },
+            { code: 'SA', name: 'السعودية', flag: '🇸🇦', query: 'السعودية' },
+            { code: 'EG', name: 'مصر', flag: '🇪🇬', query: 'مصر' },
+            { code: 'AE', name: 'الإمارات', flag: '🇦🇪', query: 'الإمارات' },
+            { code: 'PS', name: 'فلسطين', flag: '🇵🇸', query: 'فلسطين' },
+            { code: 'SD', name: 'السودان', flag: '🇸🇩', query: 'السودان' },
+            { code: 'JO', name: 'الأردن', flag: '🇯🇴', query: 'الأردن' },
+            { code: 'QA', name: 'قطر', flag: '🇶🇦', query: 'قطر' },
+            { code: 'KW', name: 'الكويت', flag: '🇰🇼', query: 'الكويت' },
+            { code: 'MA', name: 'المغرب', flag: '🇲🇦', query: 'المغرب' },
+            { code: 'IQ', name: 'العراق', flag: '🇮🇶', query: 'العراق' },
+            { code: 'DZ', name: 'الجزائر', flag: '🇩🇿', query: 'الجزائر' },
+            { code: 'US', name: 'أمريكا', flag: '🇺🇸', query: 'أمريكا' },
+            { code: 'GB', name: 'بريطانيا', flag: '🇬🇧', query: 'بريطانيا' },
+            { code: 'RU', name: 'روسيا', flag: '🇷🇺', query: 'روسيا' },
+            { code: 'CN', name: 'الصين', flag: '🇨🇳', query: 'الصين' },
+            { code: 'FR', name: 'فرنسا', flag: '🇫🇷', query: 'فرنسا' },
+            { code: 'JP', name: 'اليابان', flag: '🇯🇵', query: 'اليابان' },
+            { code: 'DE', name: 'ألمانيا', flag: '🇩🇪', query: 'ألمانيا' },
+            { code: 'TR', name: 'تركيا', flag: '🇹🇷', query: 'تركيا' }
+        ];
+
+        /* HIGH-QUALITY EDITORIAL UNSPLASH FALLBACK IMAGES */
+        const editorialImages = [
+            'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80'
+        ];
+
+        /* RICH ARABIC FALLBACK DATASET FOR GUARANTEED PREMIUM UI */
+        const fallbackNews = [
+            {
+                title: "قمة الرياض للذكاء الاصطناعي تطلق مبادرات مليارية جديدة لتعزيز الابتكار الرقمي",
+                source: "رويترز عربي",
+                time: "منذ 12 دقيقة",
+                category: "تكنولوجيا",
+                country: "السعودية",
+                flag: "🇸🇦",
+                image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+                snippet: "أعلنت قمة الذكاء الاصطناعي في الرياض عن حزمة استثمارات ضخمة تستهدف دعم البنية التحتية للحوسبة السحابية والمبادرات التقنية في الشرق الأوسط.",
+                url: "#"
+            },
+            {
+                title: "ارتفاع مؤشرات الأسواق العالمية بعد تقارير إيجابية عن نمو الاقتصاد وتراجع التضخم",
+                source: "بلومبرغ الشرق",
+                time: "منذ 25 دقيقة",
+                category: "اقتصاد",
+                country: "أمريكا",
+                flag: "🇺🇸",
+                image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80",
+                snippet: "شهدت أسواق الأسهم العالمية مكاسب ملموسة اليوم استجابة للبيانات الاقتصادية التي أظهرت تباطؤ معدلات التضخم واستقرار معدلات الفائدة.",
+                url: "#"
+            },
+            {
+                title: "اتفاقيات مناخية دولية جديدة لزيادة الاعتماد على الطاقة الشمسية والرياح بحلول 2030",
+                source: "سكاي نيوز عربية",
+                time: "منذ 45 دقيقة",
+                category: "سياسة",
+                country: "الإمارات",
+                flag: "🇦🇪",
+                image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80",
+                snippet: "وقعت عدة دول خريطة طريق جديدة لتسريع الانتقال نحو حلول الطاقة النظيفة وتقليل الانبعاثات الكربونية في قطاع التصنيع والخدمات.",
+                url: "#"
+            },
+            {
+                title: "افتتاح التوسعة الجديدة لمشروع الميناء المحوري وتسهيل حركة التجارة البحرية",
+                source: "الجزيرة نت",
+                time: "منذ ساعة",
+                category: "اقتصاد",
+                country: "مصر",
+                flag: "🇪🇬",
+                image: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80",
+                snippet: "دشنت السلطات البحرية المرحلة الأولى من التوسعة اللوجستية الضخمة لرفع الطاقة الاستيعابية للشحن البحري وزيادة معدل مرور الترانزيت.",
+                url: "#"
+            },
+            {
+                title: "إطلاق أسرع شريحة معالجة فائقة السرعة لدعم تطبيقات الذكاء الاصطناعي التوليدي",
+                source: "التقنية اليوم",
+                time: "منذ ساعتين",
+                category: "تكنولوجيا",
+                country: "اليابان",
+                flag: "🇯🇵",
+                image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80",
+                snippet: "كشفت المختبرات التقنية عن الجيل الجديد من المعالجات فائقة الأداء المصممة لإنجاز مليار عملية حوسبة في أجزاء من الثانية بمعدل استهلاك طاقة منخفض.",
+                url: "#"
+            },
+            {
+                title: "استعدادات مكثفة لبطولة ألعاب القوى العالمية بمشاركة نخبة النجوم العرب",
+                source: "بي إن سبورتس",
+                time: "منذ 3 ساعات",
+                category: "رياضة",
+                country: "قطر",
+                flag: "🇶🇦",
+                image: "https://images.unsplash.com/photo-1517649763962-0c623266010b?auto=format&fit=crop&w=800&q=80",
+                snippet: "تكتمل التجهيزات الفنية واللوجستية لاستضافة التظاهرة الرياضية الكبرى بمشاركة واسعة من أبطال الألعاب الفردية والجماعية.",
+                url: "#"
+            }
+        ];
+
+        // Global State Variables
+        let currentCountry = 'all';
+        let currentCategory = 'all';
+        let currentArticles = [];
+        let activeArticle = null;
+
+        // On Window Load Initializer
+        window.onload = function() {
+            renderCountryPills();
+            renderModalCountryGrid();
+            fetchNewsForCountry('all');
+        };
+
+        // Render Horizontal Scrollable Country Selector Strip
+        function renderCountryPills() {
+            const container = document.getElementById('countryPillContainer');
+            container.innerHTML = countriesList.map(c => `
+                <button onclick="selectCountry('${c.code}')" id="pill-${c.code}" 
+                    class="country-pill flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-700 px-4 py-2 rounded-full text-xs font-semibold shadow-sm border border-slate-200/80 transition-all shrink-0 ${c.code === currentCountry ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-slate-900/10' : ''}">
+                    <span class="text-sm">${c.flag}</span>
+                    <span>${c.name}</span>
+                    ${c.code === 'SA' || c.code === 'US' || c.code === 'EG' ? '<span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>' : ''}
+                </button>
+            `).join('');
+        }
+
+        // Render All Countries Modal Directory
+        function renderModalCountryGrid(filterQuery = '') {
+            const grid = document.getElementById('modalCountryGrid');
+            const filtered = countriesList.filter(c => c.name.includes(filterQuery) || c.query.includes(filterQuery));
+            
+            grid.innerHTML = filtered.map(c => `
+                <div onclick="selectCountryFromModal('${c.code}')" class="flex items-center gap-3 p-3 bg-slate-50 hover:bg-rose-50 border border-slate-200/60 hover:border-rose-200 rounded-2xl cursor-pointer transition-all group">
+                    <span class="text-2xl group-hover:scale-110 transition-transform">${c.flag}</span>
+                    <div>
+                        <div class="text-xs font-bold text-slate-800 group-hover:text-rose-600">${c.name}</div>
+                        <span class="text-[10px] text-slate-400">تغطية مباشرة</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterModalCountries() {
+            const query = document.getElementById('modalCountrySearch').value.trim();
+            renderModalCountryGrid(query);
+        }
+
+        // Select Country Handler
+        function selectCountry(code) {
+            currentCountry = code;
+            renderCountryPills();
+            
+            const found = countriesList.find(c => c.code === code);
+            const activeBadge = document.getElementById('activeCountryName');
+            const sectionTitle = document.getElementById('sectionTitle');
+            
+            if(found) {
+                activeBadge.innerText = `${found.flag} تغطية: ${found.name}`;
+                sectionTitle.innerText = code === 'all' ? 'أبرز أحداث الساعة العالمية' : `أخبار ${found.name} الآن`;
+            }
+
+            fetchNewsForCountry(code);
+        }
+
+        function selectCountryFromModal(code) {
+            closeCountryModal();
+            selectCountry(code);
+        }
+
+        // Category Filter
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-900', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-600');
+            });
+            event.target.classList.remove('bg-white', 'text-slate-600');
+            event.target.classList.add('bg-slate-900', 'text-white');
+
+            renderNewsGrid();
+        }
+
+        // Main News Fetcher using RSS Proxy with Graceful Fallback
+        async function fetchNewsForCountry(code) {
+            showSkeletons();
+            const countryObj = countriesList.find(c => c.code === code) || countriesList[0];
+            
+            // Build query URL
+            const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(countryObj.query)}&hl=ar&gl=SA&ceid=SA:ar`;
+            const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+            try {
+                const response = await fetch(proxyUrl);
+                const data = await response.json();
+
+                if (data.status === 'ok' && data.items && data.items.length > 0) {
+                    currentArticles = data.items.map((item, index) => {
+                        // Clean title & extract source
+                        let titleParts = item.title.split(' - ');
+                        let source = titleParts.length > 1 ? titleParts.pop() : "موجز العالم";
+                        let cleanTitle = titleParts.join(' - ');
+
+                        return {
+                            title: cleanTitle,
+                            source: source,
+                            time: formatTime(item.pubDate),
+                            category: assignCategory(cleanTitle),
+                            country: countryObj.name,
+                            flag: countryObj.flag,
+                            image: editorialImages[index % editorialImages.length],
+                            snippet: cleanSnippet(item.description || item.content || cleanTitle),
+                            url: item.link
+                        };
+                    });
+                } else {
+                    currentArticles = getFallbackItemsForCountry(countryObj);
+                }
+            } catch (err) {
+                console.log("RSS Fetch fallback triggered:", err);
+                currentArticles = getFallbackItemsForCountry(countryObj);
+            }
+
+            renderBentoHero();
+            renderNewsGrid();
+        }
+
+        // Return fallback items dynamically adapted to chosen country
+        function getFallbackItemsForCountry(countryObj) {
+            return fallbackNews.map(item => ({
+                ...item,
+                country: countryObj.name,
+                flag: countryObj.flag
+            }));
+        }
+
+        // Render Bento Hero Section (1 Main Big Bento Card + Side Bento Cards + World Pulse Widget)
+        function renderBentoHero() {
+            const bentoSkeleton = document.getElementById('bentoSkeleton');
+            const heroMainCard = document.getElementById('heroMainCard');
+            const heroSideStack = document.getElementById('heroSideStack');
+
+            bentoSkeleton.classList.add('hidden');
+            heroMainCard.classList.remove('hidden');
+            heroSideStack.classList.remove('hidden');
+
+            if (currentArticles.length === 0) return;
+
+            const hero = currentArticles[0];
+            const secondary1 = currentArticles[1] || currentArticles[0];
+            const secondary2 = currentArticles[2] || currentArticles[0];
+
+            // Render Hero Main Card
+            heroMainCard.innerHTML = `
+                <div onclick="openArticleModal(0)" class="group bg-white rounded-3xl p-6 shadow-bento hover:shadow-bento-hover border border-slate-200/80 transition-all cursor-pointer h-full flex flex-col justify-between relative overflow-hidden">
+                    <div class="relative h-64 sm:h-72 w-full rounded-2xl overflow-hidden mb-5">
+                        <img src="${hero.image}" alt="${hero.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent"></div>
+                        
+                        <div class="absolute top-4 right-4 flex items-center gap-2">
+                            <span class="bg-rose-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                                <span>حدث عاجل</span>
+                            </span>
+                            <span class="bg-white/90 backdrop-blur-md text-slate-800 text-[11px] font-bold px-3 py-1 rounded-full shadow-sm">
+                                ${hero.flag} ${hero.country}
+                            </span>
+                        </div>
+
+                        <div class="absolute bottom-4 right-4 left-4 text-white">
+                            <span class="text-xs text-rose-300 font-bold tracking-wider">${hero.source}</span>
+                            <h3 class="text-xl sm:text-2xl font-black mt-1 leading-snug drop-shadow-sm group-hover:text-rose-200 transition-colors">${hero.title}</h3>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed font-medium mb-4">${hero.snippet}</p>
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-100 text-xs text-slate-400">
+                            <span><i class="fa-regular fa-clock ml-1"></i> ${hero.time}</span>
+                            <span class="text-rose-600 font-bold flex items-center gap-1 group-hover:translate-x-[-4px] transition-transform">
+                                <span>التفاصيل الكاملة</span>
+                                <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Render Side Bento Stack
+            heroSideStack.innerHTML = `
+                <!-- Secondary Bento 1 -->
+                <div onclick="openArticleModal(1)" class="group bg-white rounded-3xl p-5 shadow-bento hover:shadow-bento-hover border border-slate-200/80 transition-all cursor-pointer flex gap-4 items-center">
+                    <div class="w-24 h-24 rounded-2xl overflow-hidden shrink-0 bg-slate-100">
+                        <img src="${secondary1.image}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full">${secondary1.category}</span>
+                            <span class="text-[10px] text-slate-400">${secondary1.time}</span>
+                        </div>
+                        <h4 class="text-sm font-bold text-slate-900 group-hover:text-rose-600 transition-colors line-clamp-2 leading-snug">${secondary1.title}</h4>
+                    </div>
+                </div>
+
+                <!-- World Pulse Mini Widget -->
+                <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-5 text-white shadow-bento relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-rose-500 text-sm"></i>
+                            <span class="text-xs font-bold uppercase tracking-wider">نبض العالم الحي</span>
+                        </div>
+                        <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">نشط الآن</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 my-3">
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-2.5 text-center">
+                            <span class="text-lg font-black text-rose-400">98.4%</span>
+                            <span class="block text-[10px] text-slate-300">دقة المصادر الأخبارية</span>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-2.5 text-center">
+                            <span class="text-lg font-black text-emerald-400">+140</span>
+                            <span class="block text-[10px] text-slate-300">موجز رسمي مباشر</span>
+                        </div>
+                    </div>
+
+                    <!-- Hot Trending Tags -->
+                    <div class="flex flex-wrap gap-1.5 pt-2 border-t border-white/10">
+                        <span class="text-[10px] bg-white/10 hover:bg-white/20 px-2 py-0.5 rounded-full text-slate-200">#الذكاء_الاصطناعي</span>
+                        <span class="text-[10px] bg-white/10 hover:bg-white/20 px-2 py-0.5 rounded-full text-slate-200">#الأسواق_العالمية</span>
+                        <span class="text-[10px] bg-white/10 hover:bg-white/20 px-2 py-0.5 rounded-full text-slate-200">#قمة_المناخ</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render 3-Column Responsive News Grid & Native Ad Cards
+        function renderNewsGrid() {
+            const grid = document.getElementById('newsGrid');
+            const badge = document.getElementById('newsCountBadge');
+
+            let filtered = currentArticles;
+
+            if (currentCategory !== 'all') {
+                filtered = currentArticles.filter(a => a.category === currentCategory);
+            }
+
+            badge.innerText = `${filtered.length} خبراً معتمداً`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white rounded-3xl p-12 text-center border border-slate-200/80">
+                        <i class="fa-solid fa-newspaper text-4xl text-slate-300 mb-3"></i>
+                        <h4 class="font-bold text-slate-700">لا توجد أخبار مطابقة للتصنيف حالياً</h4>
+                        <p class="text-xs text-slate-400 mt-1">جرّب اختيار دولة أخرى أو العودة للتصنيف الشامل.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+
+            filtered.forEach((article, index) => {
+                // Insert Native AdCard after 3rd item
+                if (index === 3) {
+                    html += `
+                        <div class="bg-white/90 border border-dashed border-slate-300 rounded-3xl p-6 flex flex-col justify-between shadow-bento relative overflow-hidden group">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">إعلان - ADVERTISEMENT</span>
+                                <span class="bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded">AdSense In-Feed</span>
+                            </div>
+                            <div class="my-6 text-center">
+                                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-3 text-xl">
+                                    <i class="fa-solid fa-rectangle-ad"></i>
+                                </div>
+                                <h4 class="font-bold text-sm text-slate-800">مساحة إعلانية مدمجة مع التغذية</h4>
+                                <p class="text-xs text-slate-400 mt-1">تنسيق متوافق تماماً مع تجربة تصفح المستخدم</p>
+                            </div>
+                            <div class="bg-slate-100 text-slate-500 text-center py-2 rounded-xl text-xs font-semibold">
+                                انقر لمعرفة المزيد
+                            </div>
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div onclick="openArticleModal(${index})" class="group bg-white rounded-3xl p-5 shadow-bento hover:shadow-bento-hover border border-slate-200/80 transition-all cursor-pointer flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-48 w-full rounded-2xl overflow-hidden mb-4 bg-slate-100">
+                                <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">
+                                    ${article.flag} ${article.country}
+                                </div>
+                                <div class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full">
+                                    ${article.category}
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                                <span class="font-bold text-rose-600">${article.source}</span>
+                                <span><i class="fa-regular fa-clock ml-1"></i> ${article.time}</span>
+                            </div>
+
+                            <h4 class="font-bold text-base text-slate-900 group-hover:text-rose-600 transition-colors line-clamp-2 leading-snug mb-2">${article.title}</h4>
+                            <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed font-medium mb-4">${article.snippet}</p>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-slate-600">
+                            <span class="group-hover:text-rose-600 transition-colors">موجز الخبر</span>
+                            <i class="fa-solid fa-chevron-left text-[10px] text-slate-400 group-hover:translate-x-[-3px] transition-transform"></i>
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // Show Skeleton Loading State
+        function showSkeletons() {
+            const bentoSkeleton = document.getElementById('bentoSkeleton');
+            const heroMainCard = document.getElementById('heroMainCard');
+            const heroSideStack = document.getElementById('heroSideStack');
+            const grid = document.getElementById('newsGrid');
+
+            bentoSkeleton.classList.remove('hidden');
+            heroMainCard.classList.add('hidden');
+            heroSideStack.classList.add('hidden');
+
+            grid.innerHTML = Array(6).fill(0).map(() => `
+                <div class="bg-white rounded-3xl p-5 h-80 shadow-bento skeleton"></div>
+            `).join('');
+        }
+
+        // Article Modal Handlers
+        function openArticleModal(index) {
+            activeArticle = currentArticles[index] || currentArticles[0];
+            if (!activeArticle) return;
+
+            document.getElementById('modalTitle').innerText = activeArticle.title;
+            document.getElementById('modalSnippet').innerText = activeArticle.snippet;
+            document.getElementById('modalImage').src = activeArticle.image;
+            document.getElementById('modalTime').innerText = activeArticle.time;
+            document.getElementById('modalCategory').innerText = activeArticle.category;
+            document.getElementById('modalCountryTag').innerText = activeArticle.country;
+            document.getElementById('modalOriginalLink').href = activeArticle.url;
+
+            const modal = document.getElementById('articleModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function closeArticleModal() {
+            const modal = document.getElementById('articleModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        // Country Modal Handlers
+        function openCountryModal() {
+            const modal = document.getElementById('countryModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function closeCountryModal() {
+            const modal = document.getElementById('countryModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        // Info Pages Modal (Privacy, About, Terms, Ads)
+        function openInfoModal(type) {
+            const modal = document.getElementById('infoModal');
+            const title = document.getElementById('infoModalTitle');
+            const body = document.getElementById('infoModalBody');
+
+            if(type === 'about') {
+                title.innerText = 'عن منصة موجز العالم';
+                body.innerHTML = `
+                    <p>موجز العالم هي منصة إخبارية ذكية متخصصة في جمع وتنسيق الأخبار العاجلة من أبرز المصادر الرسمية والوكالات العالمية.</p>
+                    <p>تهدف المنصة لتقديم تجربة قراءة فائقة السرعة بدون تشتيت، مع تصنيف جغرافيا الجوال والأقاليم لتلقي الأنباء الأكثر أهمية فور وقوعها.</p>
+                `;
+            } else if(type === 'privacy') {
+                title.innerText = 'سياسة الخصوصية';
+                body.innerHTML = `
+                    <p>نحن نحترم خصوصية جميع الزوار. لا نقوم بتجميع أي بيانات شخصية أو بيانات تعريفية حساسة دون موافقتك الصريحة.</p>
+                    <p>قد نستخدم مزودي خدمات مثل Google AdSense لعرض الإعلانات المخصصة بناءً على تفضيلات التصفح العامة وفقاً لشروط وقوانين الإعلانات الدولية.</p>
+                `;
+            } else if(type === 'terms') {
+                title.innerText = 'شروط الاستخدام';
+                body.innerHTML = `
+                    <p>جميع الأخبار والمعلومات المعروضة مجمعة من مصادر إخبارية عامة ومفتوحة. تظل جميع الحقوق الفكرية وحقوق النشر محفوظة لمصادرها الأصلية.</p>
+                    <p>تخلي المنصة مسؤوليتها عن أي تغيرات طارئة في محتوى الأخبار الخارجية المنشورة عبر المصادر.</p>
+                `;
+            } else if(type === 'advertise') {
+                title.innerText = 'أعلن معنا';
+                body.innerHTML = `
+                    <p>هل ترغب في الوصول إلى ملايين المتابعين المهتمين بالأخبار العاجلة والتحليلات اليومية؟</p>
+                    <p class="font-bold text-slate-800">تواصل معنا عبر البريد الإلكتروني الإعلاني: ads@mojazworld.com</p>
+                `;
+            }
+
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function closeInfoModal() {
+            const modal = document.getElementById('infoModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 200);
+        }
+
+        // Search Handlers
+        function handleSearchKey(e) {
+            const val = e.target.value.trim();
+            const clearBtn = document.getElementById('clearSearchBtn');
+            
+            if(val.length > 0) clearBtn.classList.remove('hidden');
+            else clearBtn.classList.add('hidden');
+
+            if (e.key === 'Enter' && val.length > 0) {
+                searchQuery(val);
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearSearchBtn').classList.add('hidden');
+            selectCountry('all');
+        }
+
+        function searchQuery(query) {
+            showToast(`جاري البحث عن: ${query}`);
+            showSkeletons();
+            
+            // Search query proxy
+            const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=ar&gl=SA&ceid=SA:ar`;
+            const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+            fetch(proxyUrl)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'ok' && data.items.length > 0) {
+                        currentArticles = data.items.map((item, idx) => ({
+                            title: item.title.split(' - ')[0],
+                            source: item.title.split(' - ')[1] || "مصدر إخباري",
+                            time: formatTime(item.pubDate),
+                            category: "نتائج البحث",
+                            country: "عالمي",
+                            flag: "🔍",
+                            image: editorialImages[idx % editorialImages.length],
+                            snippet: cleanSnippet(item.description || item.title),
+                            url: item.link
+                        }));
+                    } else {
+                        showToast("لم نجد نتائج مباشرة، تم إظهار نتائج مقترحة");
+                    }
+                    renderBentoHero();
+                    renderNewsGrid();
+                })
+                .catch(() => {
+                    renderBentoHero();
+                    renderNewsGrid();
+                });
+        }
+
+        // Mobile Search Toggle
+        function toggleMobileSearch() {
+            const box = document.getElementById('mobileSearchBox');
+            box.classList.toggle('hidden');
+        }
+
+        // Manual Refresh Button Animation & Fetch
+        function refreshNews() {
+            const icon = document.getElementById('refreshIcon');
+            icon.classList.add('fa-spin');
+            showToast("جاري تحديث نبض الأخبار...");
+            
+            fetchNewsForCountry(currentCountry).then(() => {
+                setTimeout(() => icon.classList.remove('fa-spin'), 600);
+            });
+        }
+
+        // Share & Toast Notification System
+        function copyCurrentArticleLink() {
+            if(!activeArticle) return;
+            const textToCopy = `${activeArticle.title} - اقرأ الخبر على موجز العالم`;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast("تم نسخ الخبر ورابط المشاركة بنجاح");
+            }).catch(() => {
+                showToast("تم النسخ للحافظة");
+            });
+        }
+
+        function showToast(msg) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 pointer-events-auto transition-all transform translate-y-2 opacity-0';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-rose-500"></i> <span>${msg}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Utility Helpers
+        function formatTime(pubDateStr) {
+            if(!pubDateStr) return "منذ قليل";
+            const diffMin = Math.floor((new Date() - new Date(pubDateStr)) / 60000);
+            if (isNaN(diffMin) || diffMin < 1) return "الآن";
+            if (diffMin < 60) return `منذ ${diffMin} دقيقة`;
+            const diffHours = Math.floor(diffMin / 60);
+            if (diffHours < 24) return `منذ ${diffHours} ساعة`;
+            return `منذ ${Math.floor(diffHours / 24)} يوم`;
+        }
+
+        function cleanSnippet(htmlStr) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = htmlStr;
+            const text = tmp.textContent || tmp.innerText || '';
+            return text.length > 130 ? text.substring(0, 130) + '...' : text;
+        }
+
+        function assignCategory(title) {
+            if (title.includes('نفط') || title.includes('اقتصاد') || title.includes('أسواق') || title.includes('تضخم') || title.includes('استثمار')) return 'اقتصاد';
+            if (title.includes('ذكاء') || title.includes('تقنية') || title.includes('تكنولوجيا') || title.includes('شريحة') || title.includes('هاتف')) return 'تكنولوجيا';
+            if (title.includes('كرة') || title.includes('بطولة') || title.includes('مباراة') || title.includes('دوري') || title.includes('رياضة')) return 'رياضة';
+            return 'سياسة';
+        }
+    </script>
+</body>
+</html>
