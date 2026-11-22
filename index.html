@@ -750,7 +750,7 @@
             const countryObj = countriesList.find(c => c.code === code) || countriesList[0];
             
             // Build query URL
-            const englishQueries = { all: 'world news', SA: 'Saudi Arabia', EG: 'Egypt', AE: 'United Arab Emirates', PS: 'Palestine', SD: 'Sudan', JO: 'Jordan', QA: 'Qatar', KW: 'Kuwait', MA: 'Morocco', IQ: 'Iraq', DZ: 'Algeria', US: 'United States', GB: 'United Kingdom', RU: 'Russia', CN: 'China', FR: 'France' };
+            const englishQueries = { all: 'world news', SA: 'Saudi Arabia', EG: 'Egypt', AE: 'United Arab Emirates', PS: 'Palestine', SD: 'Sudan', JO: 'Jordan', QA: 'Qatar', KW: 'Kuwait', MA: 'Morocco', IQ: 'Iraq', DZ: 'Algeria', US: 'United States', GB: 'United Kingdom', RU: 'Russia', CN: 'China', FR: 'France', JP: 'Japan', DE: 'Germany', TR: 'Turkey' };
             const newsQuery = currentLanguage === 'en' ? (englishQueries[code] || countryObj.query) : countryObj.query;
             const languageParams = currentLanguage === 'en' ? 'hl=en-US&gl=US&ceid=US:en' : 'hl=ar&gl=SA&ceid=SA:ar';
             const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(newsQuery)}&${languageParams}`;
