@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mojaz-world.munt-hadi58.workers.dev/sitemap.xml
