@@ -66,6 +66,10 @@
             background: #94A3B8;
         }
 
+        /* Keep mixed Arabic/English headlines readable in the same editorial layout. */
+        #heroMainCard h3, #heroMainCard p, #heroSideStack h4, #newsGrid h3, #newsGrid p, #tickerContent span { direction: auto; unicode-bidi: plaintext; }
+        #heroMainCard h3, #heroSideStack h4, #newsGrid h3 { overflow-wrap: anywhere; }
+
         /* Ticker animation */
         .ticker-wrap {
             overflow: hidden;
@@ -239,8 +243,12 @@
                     </div>
                 </div>
 
-                <!-- Right Actions: All Countries Modal Trigger & Refresh -->
+                <!-- Right Actions: Language, countries and refresh -->
                 <div class="flex items-center gap-2.5">
+                    <div class="flex items-center gap-1 rounded-full bg-slate-100 p-1 border border-slate-200" aria-label="News language">
+                        <button id="langArabicBtn" onclick="setNewsLanguage('ar')" class="px-3 py-1.5 rounded-full text-xs font-bold bg-slate-900 text-white">العربية</button>
+                        <button id="langEnglishBtn" onclick="setNewsLanguage('en')" class="px-3 py-1.5 rounded-full text-xs font-bold text-slate-600 hover:bg-white">English</button>
+                    </div>
                     <button onclick="openCountryModal()" class="flex items-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-3.5 py-2 rounded-full text-xs font-semibold shadow-sm transition-all hover:border-slate-300">
                         <i class="fa-solid fa-earth-americas text-rose-600 text-sm"></i>
                         <span class="hidden sm:inline">كل دول العالم</span>
@@ -636,6 +644,7 @@
 
         // Global State Variables
         let currentCountry = 'all';
+        let currentLanguage = 'ar';
         let currentCategory = 'all';
         let currentArticles = [];
         let activeArticle = null;
@@ -650,6 +659,21 @@
                 if (!document.hidden) fetchNewsForCountry(currentCountry);
             }, 10 * 60 * 1000);
         };
+
+        // Switch between Arabic and English Google News feeds.
+        function setNewsLanguage(language) {
+            if (!['ar', 'en'].includes(language) || currentLanguage === language) return;
+            currentLanguage = language;
+            const ar = document.getElementById('langArabicBtn');
+            const en = document.getElementById('langEnglishBtn');
+            if (ar && en) {
+                ar.className = language === 'ar' ? 'px-3 py-1.5 rounded-full text-xs font-bold bg-slate-900 text-white' : 'px-3 py-1.5 rounded-full text-xs font-bold text-slate-600 hover:bg-white';
+                en.className = language === 'en' ? 'px-3 py-1.5 rounded-full text-xs font-bold bg-slate-900 text-white' : 'px-3 py-1.5 rounded-full text-xs font-bold text-slate-600 hover:bg-white';
+            }
+            document.documentElement.lang = language;
+            document.documentElement.dir = 'rtl';
+            fetchNewsForCountry(currentCountry);
+        }
 
         // Render Horizontal Scrollable Country Selector Strip
         function renderCountryPills() {
@@ -726,7 +750,10 @@
             const countryObj = countriesList.find(c => c.code === code) || countriesList[0];
             
             // Build query URL
-            const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(countryObj.query)}&hl=ar&gl=SA&ceid=SA:ar`;
+            const englishQueries = { all: 'world news', SA: 'Saudi Arabia', EG: 'Egypt', AE: 'United Arab Emirates', PS: 'Palestine', SD: 'Sudan', JO: 'Jordan', QA: 'Qatar', KW: 'Kuwait', MA: 'Morocco', IQ: 'Iraq', DZ: 'Algeria', US: 'United States', GB: 'United Kingdom', RU: 'Russia', CN: 'China', FR: 'France' };
+            const newsQuery = currentLanguage === 'en' ? (englishQueries[code] || countryObj.query) : countryObj.query;
+            const languageParams = currentLanguage === 'en' ? 'hl=en-US&gl=US&ceid=US:en' : 'hl=ar&gl=SA&ceid=SA:ar';
+            const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(newsQuery)}&${languageParams}`;
             const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
 
             try {
