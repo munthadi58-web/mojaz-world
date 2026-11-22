@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>موجز العالم | نبض الأخبار العالمية لحظة بلحظة</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='14' fill='%23e11d48'/%3E%3Ccircle cx='24' cy='24' r='17' fill='none' stroke='white' stroke-width='2.5'/%3E%3Cpath d='M7 24h34M24 7c10 10 10 24 0 34M24 7c-10 10-10 24 0 34M12 29h8l4-7 4 10 3-5h5' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: IBM Plex Sans Arabic -->
@@ -255,7 +256,7 @@
                 <!-- Brand Logo & Live Pulse -->
                 <div class="flex items-center gap-3 cursor-pointer" onclick="selectCountry('all')">
                     <div class="relative w-11 h-11 bg-rose-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-rose-600/30 font-bold text-xl transform hover:scale-105 transition-transform">
-                        <i class="fa-solid font-bold">مـ</i>
+                        <svg viewBox="0 0 48 48" class="w-8 h-8" aria-hidden="true" fill="none"><circle cx="24" cy="24" r="18" stroke="white" stroke-width="2.8"/><path d="M6.8 24h34.4M24 6c5 5 7.5 11 7.5 18S29 37 24 42M24 6c-5 5-7.5 11-7.5 18S19 37 24 42" stroke="white" stroke-width="1.8" opacity=".9"/><path d="M12 29h8l3-6 4 9 3-5h6" stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="36" cy="12" r="4" fill="#a7f3d0" stroke="#fff" stroke-width="1.5"/></svg>
                         <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-white"></span>
@@ -387,6 +388,8 @@
                 <button onclick="filterCategory('اقتصاد')" class="cat-btn bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-slate-200 transition-all">اقتصاد</button>
                 <button onclick="filterCategory('تكنولوجيا')" class="cat-btn bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-slate-200 transition-all">تكنولوجيا</button>
                 <button onclick="filterCategory('رياضة')" class="cat-btn bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-slate-200 transition-all">رياضة</button>
+                <button onclick="filterCategory('أسهم')" class="cat-btn bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-slate-200 transition-all">الأسهم</button>
+                <button onclick="filterCategory('ذهب')" class="cat-btn bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-slate-200 transition-all">الذهب</button>
             </div>
         </div>
 
@@ -437,7 +440,7 @@
                 <!-- Brand Footer -->
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 bg-rose-600 rounded-xl flex items-center justify-center text-white font-bold text-base shadow-sm">
-                        مـ
+                        <svg viewBox="0 0 48 48" class="w-7 h-7" aria-hidden="true" fill="none"><circle cx="24" cy="24" r="18" stroke="white" stroke-width="2.8"/><path d="M6.8 24h34.4M24 6c5 5 7.5 11 7.5 18S29 37 24 42M24 6c-5 5-7.5 11-7.5 18S19 37 24 42" stroke="white" stroke-width="1.8" opacity=".9"/><path d="M12 29h8l3-6 4 9 3-5h6" stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </div>
                     <div>
                         <div class="font-bold text-slate-900 text-base">موجز العالم | نبض الأخبار</div>
@@ -775,13 +778,13 @@
         function filterCategory(cat) {
             currentCategory = cat;
             document.querySelectorAll('.cat-btn').forEach(btn => {
-                btn.classList.remove('bg-slate-900', 'text-white');
-                btn.classList.add('bg-white', 'text-slate-600');
+                const active = (btn.getAttribute('onclick') || '').includes(`'${cat}'`);
+                btn.classList.toggle('bg-slate-900', active);
+                btn.classList.toggle('text-white', active);
+                btn.classList.toggle('bg-white', !active);
+                btn.classList.toggle('text-slate-600', !active);
             });
-            event.target.classList.remove('bg-white', 'text-slate-600');
-            event.target.classList.add('bg-slate-900', 'text-white');
-
-            renderNewsGrid();
+            fetchNewsForCountry(currentCountry);
         }
 
         // Main News Fetcher using RSS Proxy with Graceful Fallback
@@ -791,8 +794,22 @@
             
             // Build query URL
             const englishQueries = { all: 'world news', SA: 'Saudi Arabia', EG: 'Egypt', AE: 'United Arab Emirates', PS: 'Palestine', SD: 'Sudan', JO: 'Jordan', QA: 'Qatar', KW: 'Kuwait', MA: 'Morocco', IQ: 'Iraq', DZ: 'Algeria', US: 'United States', GB: 'United Kingdom', RU: 'Russia', CN: 'China', FR: 'France', JP: 'Japan', DE: 'Germany', TR: 'Turkey' };
-            const newsQuery = currentLanguage === 'en' ? (englishQueries[code] || countryObj.query) : countryObj.query;
             const languageParams = currentLanguage === 'en' ? 'hl=en-US&gl=US&ceid=US:en' : 'hl=ar&gl=SA&ceid=SA:ar';
+            const sourceGroups = currentLanguage === 'en'
+                ? { stocks: '(site:reuters.com OR site:cnbc.com OR site:marketwatch.com OR site:bloomberg.com OR site:ft.com)', gold: '(site:reuters.com OR site:cnbc.com OR site:marketwatch.com OR site:bloomberg.com OR site:kitco.com)' }
+                : { stocks: '(site:argaam.com OR site:asharqbusiness.com OR site:cnbcarabia.com OR site:aleqt.com OR site:reuters.com)', gold: '(site:argaam.com OR site:asharqbusiness.com OR site:cnbcarabia.com OR site:aleqt.com OR site:reuters.com)' };
+            const marketTopics = currentLanguage === 'en'
+                ? { 'أسهم': 'stocks stock market shares earnings', 'ذهب': 'gold bullion gold price precious metals' }
+                : { 'أسهم': 'الأسهم سوق الأسهم تداول الشركات أرباح الشركات', 'ذهب': 'الذهب أسعار الذهب المعدن الأصفر السبائك' };
+            let newsQuery;
+            if (marketTopics[currentCategory]) {
+                const topic = marketTopics[currentCategory];
+                const sourceKey = currentCategory === 'أسهم' ? 'stocks' : 'gold';
+                const region = code === 'all' ? '' : (currentLanguage === 'en' ? (englishQueries[code] || '') : countryObj.query);
+                newsQuery = `${region} ${topic} ${sourceGroups[sourceKey]} when:7d`.trim();
+            } else {
+                newsQuery = currentLanguage === 'en' ? (englishQueries[code] || countryObj.query) : countryObj.query;
+            }
             const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(newsQuery)}&${languageParams}`;
             const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
 
@@ -1254,7 +1271,10 @@
         }
 
         function assignCategory(title) {
-            if (title.includes('نفط') || title.includes('اقتصاد') || title.includes('أسواق') || title.includes('تضخم') || title.includes('استثمار')) return 'اقتصاد';
+            const t = (title || '').toLowerCase();
+            if (/ذهب|سبائك|معدن أصفر|gold|bullion|precious metal/.test(t)) return 'ذهب';
+            if (/أسهم|سهم|بورصة|تداول|مؤشر|shares|stocks|stock market|nasdaq|dow jones|s\&p 500/.test(t)) return 'أسهم';
+            if (title.includes('نفط') || title.includes('اقتصاد') || title.includes('أسواق') || title.includes('تضخم') || title.includes('استثمار') || /economy|inflation|oil|markets|investment/.test(t)) return 'اقتصاد';
             if (title.includes('ذكاء') || title.includes('تقنية') || title.includes('تكنولوجيا') || title.includes('شريحة') || title.includes('هاتف')) return 'تكنولوجيا';
             if (title.includes('كرة') || title.includes('بطولة') || title.includes('مباراة') || title.includes('دوري') || title.includes('رياضة')) return 'رياضة';
             return 'سياسة';
