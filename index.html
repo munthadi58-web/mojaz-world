@@ -869,11 +869,8 @@
 
         // Return fallback items dynamically adapted to chosen country
         function getFallbackItemsForCountry(countryObj) {
-            return fallbackNews.map(item => ({
-                ...item,
-                country: countryObj.name,
-                flag: countryObj.flag
-            }));
+            // Never present demo/sample headlines as current reporting when a live feed fails.
+            return [];
         }
 
         // Render Bento Hero Section (1 Main Big Bento Card + Side Bento Cards + World Pulse Widget)
