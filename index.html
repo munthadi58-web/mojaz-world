@@ -108,6 +108,91 @@
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
+
+
+        /* موجز العالم — responsive editorial redesign */
+        :root { color-scheme: light; }
+        html { scroll-padding-top: 88px; }
+        body { background:#f5f6f8 !important; color:#182230; overflow-x:hidden; }
+        img { max-width:100%; }
+        button, input { font:inherit; }
+        .glass-header { background:rgba(255,255,255,.94) !important; border-bottom:1px solid #e7eaf0; box-shadow:0 8px 28px rgba(20,32,52,.045); }
+        header .h-20 { min-height:76px; }
+        header h1 { letter-spacing:-.04em; }
+        header .max-w-7xl, main.max-w-7xl, footer .max-w-7xl, body > div.max-w-7xl, body > nav.max-w-7xl { width:min(100% - 40px, 1240px); }
+        main.max-w-7xl { margin-top:34px !important; }
+        #sectionTitle { font-size:clamp(1.45rem,2.5vw,2.15rem); letter-spacing:-.04em; }
+        #sectionSubtitle { font-size:.9rem; margin-top:7px; }
+        #bentoHeroSection { align-items:stretch; gap:18px !important; }
+        #heroMainCard > div { padding:14px !important; border-radius:26px !important; }
+        #heroMainCard img { border-radius:20px; }
+        #heroSideStack { gap:16px !important; }
+        #heroSideStack > div { border-radius:22px !important; }
+        #newsGrid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px !important; }
+        #newsGrid > div { min-width:0; border-radius:22px !important; padding:14px !important; }
+        #newsGrid img { border-radius:16px !important; }
+        .ticker-wrap { min-width:0; }
+        #countryPillContainer { padding-bottom:10px; }
+        .country-pill { min-height:42px; }
+        .cat-btn { min-height:38px; white-space:nowrap; }
+        footer { margin-top:48px !important; }
+        footer .max-w-7xl { padding-top:34px !important; padding-bottom:26px !important; }
+        #toastContainer { max-width:calc(100vw - 32px); }
+        #articleModal > div, #countryModal > div, #infoModal > div { border-radius:24px !important; }
+        /* Ad placeholders stay quiet until a real AdSense unit is approved */
+        body > div.max-w-7xl.pt-6 > div { min-height:74px !important; background:#fff !important; }
+        @media (max-width: 900px) {
+          #newsGrid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+          #bentoHeroSection { grid-template-columns:1fr !important; }
+          #heroMainCard, #heroSideStack { grid-column:1 / -1 !important; }
+        }
+        @media (max-width: 640px) {
+          header .max-w-7xl, main.max-w-7xl, footer .max-w-7xl, body > div.max-w-7xl, body > nav.max-w-7xl { width:calc(100% - 28px) !important; max-width:none !important; padding-left:0 !important; padding-right:0 !important; }
+          header .h-20 { height:68px !important; min-height:68px !important; gap:8px !important; }
+          header .w-11 { width:40px !important; height:40px !important; border-radius:14px !important; }
+          header h1 { font-size:17px !important; }
+          header p { font-size:10px !important; }
+          header .flex.items-center.gap-2\.5 { gap:6px !important; }
+          header button.w-9 { width:38px !important; height:38px !important; }
+          body > div.max-w-7xl.pt-6 { padding-top:12px !important; }
+          body > div.max-w-7xl.pt-6 > div { min-height:54px !important; padding:8px !important; border-radius:14px !important; }
+          body > div.max-w-7xl.pt-6 span { font-size:9px !important; }
+          .ticker-wrap { font-size:12px !important; }
+          nav.max-w-7xl { margin-top:14px !important; }
+          #countryPillContainer { gap:7px !important; }
+          .country-pill { padding:9px 12px !important; font-size:12px !important; }
+          main.max-w-7xl { margin-top:22px !important; margin-bottom:36px !important; }
+          main > .flex.flex-col.sm\:flex-row { gap:14px !important; margin-bottom:18px !important; }
+          #sectionTitle { font-size:21px !important; line-height:1.35 !important; }
+          #sectionSubtitle { font-size:11px !important; line-height:1.7 !important; }
+          main .cat-btn { padding:8px 13px !important; font-size:11px !important; }
+          #bentoHeroSection { display:flex !important; flex-direction:column !important; gap:12px !important; margin-bottom:28px !important; }
+          #heroMainCard, #heroSideStack { width:100% !important; }
+          #heroMainCard > div { padding:10px !important; border-radius:20px !important; }
+          #heroMainCard .relative.h-64, #heroMainCard .relative.sm\:h-72 { height:220px !important; margin-bottom:12px !important; }
+          #heroMainCard h3 { font-size:18px !important; line-height:1.45 !important; }
+          #heroMainCard p { font-size:12px !important; }
+          #heroSideStack { gap:10px !important; }
+          #heroSideStack > div { padding:12px !important; border-radius:18px !important; }
+          #heroSideStack .w-24 { width:82px !important; height:82px !important; }
+          #heroSideStack h4 { font-size:12px !important; line-height:1.55 !important; }
+          #heroSideStack .text-lg { font-size:16px !important; }
+          #newsGrid { grid-template-columns:1fr !important; gap:12px !important; }
+          #newsGrid > div { padding:12px !important; border-radius:19px !important; }
+          #newsGrid .relative.h-48 { height:190px !important; }
+          #newsGrid h4 { font-size:15px !important; line-height:1.55 !important; }
+          #newsGrid p { font-size:12px !important; line-height:1.7 !important; }
+          #newsGrid > div:nth-child(4) { display:none !important; }
+          footer .max-w-7xl { padding-top:26px !important; }
+          footer .flex.flex-col.md\:flex-row { align-items:flex-start !important; }
+          footer .text-xs { line-height:1.8 !important; }
+          #articleModal, #countryModal, #infoModal { padding:10px !important; }
+          #articleModal > div, #countryModal > div, #infoModal > div { max-height:92vh !important; padding:16px !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; }
+        }
+
     </style>
 </head>
 <body class="text-slate-800 antialiased selection:bg-rose-100 selection:text-rose-700 min-h-screen flex flex-col">
@@ -560,6 +645,10 @@
             renderCountryPills();
             renderModalCountryGrid();
             fetchNewsForCountry('all');
+            // Refresh live RSS headlines every 10 minutes while the page is open.
+            window.setInterval(() => {
+                if (!document.hidden) fetchNewsForCountry(currentCountry);
+            }, 10 * 60 * 1000);
         };
 
         // Render Horizontal Scrollable Country Selector Strip
@@ -671,8 +760,27 @@
                 currentArticles = getFallbackItemsForCountry(countryObj);
             }
 
+            // Remove duplicate headlines while preserving the newest source order.
+            const seenTitles = new Set();
+            currentArticles = currentArticles.filter(article => {
+                const key = (article.title || '').toLowerCase().replace(/[\s\p{P}]+/gu, ' ').trim();
+                if (!key || seenTitles.has(key)) return false;
+                seenTitles.add(key);
+                return true;
+            });
+
             renderBentoHero();
             renderNewsGrid();
+            updateLiveTicker();
+        }
+
+        function updateLiveTicker() {
+            const ticker = document.getElementById('tickerContent');
+            if (!ticker || !currentArticles.length) return;
+            const headlines = currentArticles.slice(0, 8).map(article =>
+                `<span><i class="fa-solid fa-circle text-[6px] text-rose-500 ml-2"></i>${article.title}</span>`
+            ).join('');
+            ticker.innerHTML = headlines + headlines;
         }
 
         // Return fallback items dynamically adapted to chosen country
@@ -764,12 +872,12 @@
 
                     <div class="grid grid-cols-2 gap-3 my-3">
                         <div class="bg-white/5 border border-white/10 rounded-2xl p-2.5 text-center">
-                            <span class="text-lg font-black text-rose-400">98.4%</span>
-                            <span class="block text-[10px] text-slate-300">دقة المصادر الأخبارية</span>
+                            <span class="text-lg font-black text-rose-400">RSS</span>
+                            <span class="block text-[10px] text-slate-300">تغذية أخبار مباشرة</span>
                         </div>
                         <div class="bg-white/5 border border-white/10 rounded-2xl p-2.5 text-center">
-                            <span class="text-lg font-black text-emerald-400">+140</span>
-                            <span class="block text-[10px] text-slate-300">موجز رسمي مباشر</span>
+                            <span class="text-lg font-black text-emerald-400">10 دقائق</span>
+                            <span class="block text-[10px] text-slate-300">فاصل التحديث التلقائي</span>
                         </div>
                     </div>
 
