@@ -197,6 +197,46 @@
           *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; }
         }
 
+
+        /* Mobile repair: keep the language selector without widening the page */
+        *, *::before, *::after { box-sizing:border-box; }
+        html, body { width:100%; max-width:100%; overflow-x:clip !important; }
+        @media (max-width:640px) {
+          header .max-w-7xl > div {
+            height:auto !important; min-height:0 !important;
+            display:flex !important; flex-direction:column !important;
+            align-items:stretch !important; gap:10px !important;
+            padding-top:10px !important; padding-bottom:10px !important;
+          }
+          header .max-w-7xl > div > div:first-child {
+            width:100%; justify-content:center !important;
+          }
+          header .max-w-7xl > div > div:last-child {
+            width:100%; justify-content:center !important;
+            flex-wrap:wrap !important; gap:7px !important;
+          }
+          header .max-w-7xl > div > div:last-child > div:first-child {
+            flex:0 0 auto; margin-inline:4px;
+          }
+          header .max-w-7xl > div > div:last-child button {
+            flex-shrink:0;
+          }
+          header .max-w-7xl { width:calc(100% - 24px) !important; }
+          main.max-w-7xl, nav.max-w-7xl, footer .max-w-7xl,
+          body > div.max-w-7xl { width:calc(100% - 24px) !important; max-width:100% !important; }
+          main, nav, header, footer, #bentoHeroSection, #newsGrid { min-width:0 !important; }
+          #bentoHeroSection, #heroMainCard, #heroSideStack, #newsGrid,
+          #heroMainCard > div, #newsGrid > div { max-width:100% !important; min-width:0 !important; }
+          #sectionTitle, #sectionSubtitle { overflow-wrap:anywhere; }
+          .ticker-wrap { max-width:100%; }
+        }
+        /* Refined cool editorial canvas while retaining the established rose identity */
+        body { background:linear-gradient(180deg,#edf3fb 0%,#f7f8fb 38%,#f1f4f8 100%) !important; }
+        .glass-header { background:rgba(255,255,255,.96) !important; }
+        #heroMainCard > div, #heroSideStack > div, #newsGrid > div {
+          box-shadow:0 12px 32px rgba(24,39,75,.075) !important;
+          border-color:#e5eaf2 !important;
+        }
     </style>
 </head>
 <body class="text-slate-800 antialiased selection:bg-rose-100 selection:text-rose-700 min-h-screen flex flex-col">
